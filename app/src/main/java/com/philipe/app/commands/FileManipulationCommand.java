@@ -1,8 +1,12 @@
 package com.philipe.app.commands;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 
@@ -60,9 +64,44 @@ public class FileManipulationCommand {
     public String readTextFile(String fileName) {
         Path outPutFile = this.outputPath.resolve(fileName);
         try {
-            return Files.readString(outPutFile);
+
+            Stream<String> fileLines = Files.lines(outPutFile);
+
+            StringBuilder builder = new StringBuilder();
+            int i = 1;
+            for (String line : fileLines.toList()) {
+                
+                builder.append(String.format("%d: %s",i, line) + System.lineSeparator());
+                
+                i++;
+            }
+            fileLines.close();
+            return builder.toString();
         } catch (IOException e) {
             String error = String.format("Erro ao ler o arquivo '%s': %s", fileName, e.getMessage());
+            
+            AppLogger.log(error);            
+            return error;
+        }
+    }
+
+    @ShellMethod(key = "delete-file", value = "Deleta arquivo")
+    public String deleteFile(String fileName) {
+        Path outPutFile = this.outputPath.resolve(fileName);
+
+        
+        try {
+
+            if (Files.exists(outPutFile)) { 
+                AppLogger.log("Arquivo %s encontrado e será deletado.", fileName);
+                Files.delete(outPutFile);
+            }else{
+                throw new FileNotFoundException(String.format("Arquivo %s não existe", outPutFile.toAbsolutePath().toString() ));                
+            }
+            
+            return String.format("Arquivo %s excluído.", fileName);
+        } catch (Exception e) {
+            String error = String.format("Erro ao ler o arquivo '%s': %s ", fileName, e.getMessage() );
             
             AppLogger.log(error);            
             return error;
