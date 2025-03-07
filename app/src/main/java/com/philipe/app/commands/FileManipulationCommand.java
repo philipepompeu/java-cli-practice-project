@@ -26,6 +26,8 @@ import org.springframework.shell.standard.ShellMethod;
 
 import com.philipe.app.utilities.AppLogger;
 
+import jakarta.annotation.PreDestroy;
+
 
 @ShellComponent
 public class FileManipulationCommand {
@@ -45,6 +47,11 @@ public class FileManipulationCommand {
             }
         }
         return outputPath;
+    }
+
+    @PreDestroy
+    public void shutdownExecutor() {
+        executor.shutdown();
     }
 
     @ShellMethod(key = "save-text", value = "Salva o texto em um arquivo no diretório de saída.")
@@ -83,9 +90,9 @@ public class FileManipulationCommand {
             StringBuilder builder = new StringBuilder();
             
             int i = 1;
-            for (String line : fileLines.toList()) {
+            for (String line : (Iterable<String>) fileLines::iterator) {
                 
-                builder.append(String.format("%d: %s",i, line) + System.lineSeparator());
+                builder.append(String.format("%d: %s%n",i, line));
                 
                 i++;
             }
@@ -102,14 +109,15 @@ public class FileManipulationCommand {
     @ShellMethod(key = "search-text", value = "Busca um texto dentro de um arquivo.")
     public String findTextInFile(String fileName, String textToBeFound) {
         Path outPutFile = this.outputPath.resolve(fileName);
+        String searchUpper  = textToBeFound.toUpperCase();
         try(Stream<String> fileLines = Files.lines(outPutFile)) {            
 
             StringBuilder builder = new StringBuilder();
             int i = 1;
-            for (String line : fileLines.toList()) {
+            for (String line : (Iterable<String>) fileLines::iterator ) {
                 
-                if (line.toUpperCase().contains(textToBeFound.toUpperCase())) {                    
-                    builder.append(String.format("%d: %s",i, line) + System.lineSeparator());
+                if (line.toUpperCase().contains(searchUpper)) {                    
+                    builder.append(String.format("%d: %s%n",i, line));
                 }                
                 
                 i++;
@@ -157,12 +165,8 @@ public class FileManipulationCommand {
         
         try {
 
-            if (Files.exists(outPutFile)) { 
-                AppLogger.log("Arquivo '{}' encontrado e será deletado.", fileName);
-                Files.delete(outPutFile);
-            }else{
-                throw new FileNotFoundException(String.format("Arquivo %s não existe", outPutFile.toAbsolutePath().toString() ));                
-            }
+            AppLogger.log("Arquivo '{}' encontrado e será deletado.", fileName);
+            Files.delete(outPutFile);            
             
             return String.format("Arquivo %s excluído.", fileName);
         } catch (Exception e) {
