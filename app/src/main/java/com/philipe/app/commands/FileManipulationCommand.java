@@ -207,29 +207,29 @@ public class FileManipulationCommand {
         String nameWithoutExtension = hasExension ? fileName.substring(0, fileName.lastIndexOf('.')) : fileName;
         String extension = hasExension ? fileName.substring(fileName.lastIndexOf('.')) : "";
                         
-        ArrayList<String> fileList = new ArrayList<String>();
+        ArrayList<String> generatedFiles = new ArrayList<String>();
 
         try (Stream<String> fileLines = Files.lines(outPutFile)) {
 
             int fileCount = 1;
-            int lines = 0;
+            int lineCount = 0;
             StringBuilder builder = new StringBuilder();
 
-            for (String line : fileLines.toList()) {
-                lines++;
+            for (String line : (Iterable<String>) fileLines::iterator) {
+                lineCount++;
                 
                 builder.append(line+ System.lineSeparator());                
-                if (lines == numberOfLines) {
+                if (lineCount == numberOfLines) {
                     String text = builder.toString();
                     builder.setLength(0);
                     
                     String newFileName = String.format("%s_%d%s", nameWithoutExtension, fileCount, extension);
                     asyncSaveTextInFile(newFileName, text);
 
-                    fileList.add(newFileName);
+                    generatedFiles.add(newFileName);
                     
                     fileCount++;
-                    lines = 0;
+                    lineCount = 0;
                 }                
                 
             }
@@ -239,7 +239,7 @@ public class FileManipulationCommand {
                 builder.setLength(0);
                 String newFileName = String.format("%s_%d%s", nameWithoutExtension, fileCount, extension);
                 asyncSaveTextInFile(newFileName, text);        
-                fileList.add(newFileName);        
+                generatedFiles.add(newFileName);        
             }          
             
             
@@ -248,11 +248,11 @@ public class FileManipulationCommand {
             String error = String.format("Erro ao ler o arquivo '%s': %s", fileName, e.getMessage());
     
             AppLogger.log(error);                                
-        }
+        }        
 
-        
-
-        return fileList.stream().map(file -> String.format("Arquivo %s gerado.", file)).collect(Collectors.joining("\n"));       
+        return generatedFiles.stream()
+                                .map(file -> String.format("Arquivo %s gerado.", file))
+                                .collect(Collectors.joining("\n"));       
        
     }
 
