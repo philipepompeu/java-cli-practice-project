@@ -1,6 +1,8 @@
 package com.philipe.app.commands;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.ArrayList;
@@ -13,6 +15,8 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -128,7 +132,10 @@ public class FileManipulationCommand {
         
         try (Stream<String> fileLines = Files.lines(outPutFile)) {
 
-            fileLines.flatMap(line -> Stream.of( line.split("\\s+") ) ).count();            
+            count = fileLines
+            .flatMap(line -> Stream.of( line.split("\\s+") ) )
+            .filter(word -> !(word.isBlank() || word.isEmpty()) )
+            .count();            
             
         } catch (Exception e) {
             String error = String.format("Erro ao ler o arquivo '%s': %s", fileName, e.getMessage());
@@ -257,6 +264,82 @@ public class FileManipulationCommand {
     }
 
 
-   
+    @ShellMethod(key = "compress-file", value = "Compacta um arquivo.")
+    public String compressFile(String outPutFileName, String fileToBeCompressed) {
+
+        
+        try (GZIPOutputStream gzipOut = new GZIPOutputStream(new FileOutputStream(this.outputPath.resolve(outPutFileName).toString()))) {            
+            
+            Path inputFile = this.outputPath.resolve(fileToBeCompressed) ;
+            
+            if (Files.notExists(inputFile)) {                    
+                throw new Exception( String.format("Arquivo %s não encontrado.", fileToBeCompressed) );
+            }
+
+            gzipOut.write(Files.readAllBytes(inputFile));                    
+            gzipOut.close();            
+
+        } catch (Exception e) {
+            
+            String error = String.format("Erro ao gerar o arquivo '%s': %s", outPutFileName, e.getMessage());
+        
+            AppLogger.log(error);   
+        }
+
+        return String.format("Arquivo compactado %s gerado.", outPutFileName);        
+       
+    }
+
+    @ShellMethod(key = "decompress-file", value = "Descompacta um arquivo.")
+    public String decompressFile(String inputFileName, String fileToBeDescompressed) {
+
+        
+        try (GZIPInputStream gzipOut = new GZIPInputStream(new FileInputStream(this.outputPath.resolve(inputFileName).toFile()))) {            
+            
+            Path outPutFile = this.outputPath.resolve(fileToBeDescompressed) ;
+            
+            Files.write(outPutFile, gzipOut.readAllBytes());      
+
+            gzipOut.close();            
+
+        } catch (Exception e) {
+            
+            String error = String.format("Erro ao gerar o arquivo '%s': %s", inputFileName, e.getMessage());
+        
+            AppLogger.log(error);   
+        }
+
+        return String.format("Arquivo compactado %s gerado.", inputFileName);        
+       
+    }
+
+    @ShellMethod(key = "compress-files", value = "Junta N arquivos num único arquivo.")
+    public String compressFiles(String outPutFileName, String... filesToBeCompressed) {
+
+        
+        try (GZIPOutputStream gzipOut = new GZIPOutputStream(new FileOutputStream(this.outputPath.resolve(outPutFileName).toString()))) {
+            
+            for(String file : filesToBeCompressed){            
+                
+                Path inputFile = this.outputPath.resolve(file) ;
+                
+                if (Files.notExists(inputFile)) {                    
+                    throw new Exception( String.format("Arquivo %s não encontrado.", file) );
+                }
+
+                gzipOut.write(Files.readAllBytes(inputFile));                    
+            }
+            gzipOut.close();            
+
+        } catch (Exception e) {
+            
+            String error = String.format("Erro ao gerar o arquivo '%s': %s", outPutFileName, e.getMessage());
+        
+            AppLogger.log(error);   
+        }
+
+        return String.format("Arquivo %s descompactado.", outPutFileName);        
+       
+    }
 
 }

@@ -6,6 +6,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -56,28 +60,99 @@ class FileManipulationCommandTest {
     }
     
     @Test
-    void searchText_ShouldReturnLinesWithText() {
-         // 1. Preparar: Criar um arquivo temporário para testar a exclusão
-         String fileName = "searchText.txt";
-         String textToBeFound = "Content to be Found";
+    void countWords_ShouldReturnTheNumberOfWords() {
          
-         StringBuilder builder = new StringBuilder();
-         builder.append("No content" + System.lineSeparator());
-         builder.append(textToBeFound+ System.lineSeparator());
-         builder.append("End of File"+ System.lineSeparator());
+        String fileName = "countWords_ShouldReturnTheNumberOfWords.txt";
+        String text = "This method should count the number of words in this file.";
 
-         String contentToWrite = builder.toString();
+        command.saveTextInFile(fileName, text);
 
-         command.saveTextInFile(fileName, contentToWrite);
-
-        String content = command.findTextInFile(fileName, "Found");
-        assertTrue(content.contains("2: " + textToBeFound));
+        String content = command.countWords(fileName);
+        assertTrue(content.contains("11 palavras"));
         
-        content = command.findTextInFile(fileName, "Found".toLowerCase());        
-        assertTrue(content.contains("2: " + textToBeFound));
         
-        content = command.findTextInFile(fileName, "Found".toUpperCase());
-        assertTrue(content.contains("2: " + textToBeFound));
+    }
+    
+    @Test
+    void mergeFiles_ShouldMergeTheContentOfTwoFilesIntoOne() {      
+
+        StringBuilder builder = new StringBuilder();
+        builder.append("Lines 1" + System.lineSeparator());
+        builder.append("Lines 2"+ System.lineSeparator());
+        builder.append("Lines 3" + System.lineSeparator());
+        builder.append("Lines 4"+ System.lineSeparator());
+        builder.append("End of File"+ System.lineSeparator());
+
+        String text = builder.toString();
+        String fileName = "fileToBeSplit.txt";        
+        
+        command.saveTextInFile(fileName, text);
+
+        String fileOne = "fileToBeSplit_1.txt";
+        String fileTwo = "fileToBeSplit_2.txt";        
+
+        String content = command.splitFile(fileName, 2);
+        
+        assertTrue(Files.exists(Path.of("output").resolve(fileOne)));
+        assertTrue(Files.exists(Path.of("output").resolve(fileTwo)));
+        assertTrue(content.contains(fileOne));        
+        assertTrue(content.contains(fileTwo));        
+        
+    }
+
+    @Test
+    void splitFile_ShouldSplitOneFileIntoMultiplesFilesWithTheNumberOfLines() {
+         
+        String fileOne = "mergeFiles_ShouldMergeTheContentOfTwoFilesIntoOne_1.txt";
+        String fileTwo = "mergeFiles_ShouldMergeTheContentOfTwoFilesIntoOne_2.txt";
+        String text = "Two words";
+
+        command.saveTextInFile(fileOne, text);
+        command.saveTextInFile(fileTwo, text);
+
+        String fileName = "resultOfMerge.txt";        
+        
+
+        String content = command.mergeFiles(fileName,  fileOne, fileTwo);
+        String contentOfCount = command.countWords(fileName);
+        assertTrue(content.contains(fileName));
+        assertTrue(contentOfCount.contains("4 palavras"));        
+        
+    }
+
+    @Test
+    void compressFile_ShouldCompressFileWithGZIP() {        
+
+        String text = "Content to be Compressed";
+        String fileToBeCompressed = "fileToBeCompressed.txt";        
+        
+        command.saveTextInFile(fileToBeCompressed, text);
+          
+        String compressedFile = "fileToBeCompressed.gz";
+
+        String content = command.compressFile(compressedFile, fileToBeCompressed );        
+        
+        assertTrue(Files.exists(Path.of("output").resolve(compressedFile)));
+        assertTrue(content.contains(compressedFile));        
+    }
+    
+    @Test
+    void decompressFile_ShouldDecompressFileWithGZIP() {        
+
+        String text = "Content to be Compressed";
+        String fileToBeCompressed = "fileToBeCompressed.txt";        
+
+        command.saveTextInFile(fileToBeCompressed, text);
+
+        String compressedFile = "fileToBeCompressed.gz";
+
+        command.compressFile(compressedFile, fileToBeCompressed );        
+        String fileToBeDescompressed = "fileToBeDescompressed.txt";
+
+        String content = command.decompressFile(compressedFile, fileToBeDescompressed );
+
+        assertTrue(Files.exists(Path.of("output").resolve(fileToBeDescompressed)));
+        assertTrue(content.contains(compressedFile));        
     }
 
     @Test
@@ -101,6 +176,31 @@ class FileManipulationCommandTest {
     void readTextFile_ShouldReturnErrorWhenFileNotFound() {
         String content = command.readTextFile("not_exist.txt");
         assertTrue(content.contains("Erro ao ler"));
+    }
+
+    @Test
+    void searchText_ShouldReturnLinesWithText() {
+         // 1. Preparar: Criar um arquivo temporário para testar a exclusão
+         String fileName = "searchText.txt";
+         String textToBeFound = "Content to be Found";
+         
+         StringBuilder builder = new StringBuilder();
+         builder.append("No content" + System.lineSeparator());
+         builder.append(textToBeFound+ System.lineSeparator());
+         builder.append("End of File"+ System.lineSeparator());
+
+         String contentToWrite = builder.toString();
+
+         command.saveTextInFile(fileName, contentToWrite);
+
+        String content = command.findTextInFile(fileName, "Found");
+        assertTrue(content.contains("2: " + textToBeFound));
+        
+        content = command.findTextInFile(fileName, "Found".toLowerCase());        
+        assertTrue(content.contains("2: " + textToBeFound));
+        
+        content = command.findTextInFile(fileName, "Found".toUpperCase());
+        assertTrue(content.contains("2: " + textToBeFound));
     }
 }
 
