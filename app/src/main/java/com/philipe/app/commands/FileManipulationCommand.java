@@ -3,11 +3,13 @@ package com.philipe.app.commands;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -72,6 +74,7 @@ public class FileManipulationCommand {
         try(Stream<String> fileLines = Files.lines(outPutFile)) {            
 
             StringBuilder builder = new StringBuilder();
+            
             int i = 1;
             for (String line : fileLines.toList()) {
                 
@@ -195,6 +198,63 @@ public class FileManipulationCommand {
         }
 
         return String.format("Arquivo %s gerado.", fileName);        
+       
+    }
+
+    @ShellMethod(key = "split-file", value = "Divide o arquivo em N partes")
+    public String splitFile(String fileName, int numberOfLines) {
+        Path outPutFile = this.outputPath.resolve(fileName) ;
+
+        boolean hasExension = fileName.contains(".");
+        String nameWithoutExtension = hasExension ? fileName.substring(0, fileName.lastIndexOf('.')) : fileName;
+        String extension = hasExension ? fileName.substring(fileName.lastIndexOf('.')) : "";
+                        
+        ArrayList<String> fileList = new ArrayList<String>();
+
+        try (Stream<String> fileLines = Files.lines(outPutFile)) {
+
+            int fileCount = 1;
+            int lines = 0;
+            StringBuilder builder = new StringBuilder();
+
+            for (String line : fileLines.toList()) {
+                lines++;
+                
+                builder.append(line+ System.lineSeparator());                
+                if (lines == numberOfLines) {
+                    String text = builder.toString();
+                    builder.setLength(0);
+                    
+                    String newFileName = String.format("%s_%d%s", nameWithoutExtension, fileCount, extension);
+                    asyncSaveTextInFile(newFileName, text);
+
+                    fileList.add(newFileName);
+                    
+                    fileCount++;
+                    lines = 0;
+                }                
+                
+            }
+            
+            if (builder.length() > 0) {
+                String text = builder.toString();
+                builder.setLength(0);
+                String newFileName = String.format("%s_%d%s", nameWithoutExtension, fileCount, extension);
+                asyncSaveTextInFile(newFileName, text);        
+                fileList.add(newFileName);        
+            }          
+            
+            
+            
+        } catch (Exception e) {
+            String error = String.format("Erro ao ler o arquivo '%s': %s", fileName, e.getMessage());
+    
+            AppLogger.log(error);                                
+        }
+
+        
+
+        return fileList.stream().map(file -> String.format("Arquivo %s gerado.", file)).collect(Collectors.joining("\n"));       
        
     }
 
