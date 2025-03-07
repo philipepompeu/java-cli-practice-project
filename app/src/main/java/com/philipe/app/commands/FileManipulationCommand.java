@@ -172,32 +172,30 @@ public class FileManipulationCommand {
     }
     
     @ShellMethod(key = "merge-files", value = "Junta N arquivos num único arquivo.")
-    public String mergeFiles(String fileName, String... filesToBeMerged) {
+    public String mergeFiles(String outPutFileName, String... filesToBeMerged) {
 
-        for(String file : filesToBeMerged){                        
+        for(String file : filesToBeMerged){            
             
-            CompletableFuture.runAsync(() ->{ 
-                Path outPutFile = this.outputPath.resolve(file) ;
-
-                try (Stream<String> fileLines = Files.lines(outPutFile)) {
-
-                    String text = fileLines.collect(Collectors.joining( System.lineSeparator() ));
-                    
-                    saveTextInFile(fileName, text);
-                    
-                } catch (Exception e) {
-                    String error = String.format("Erro ao ler o arquivo '%s': %s", fileName, e.getMessage());
-            
-                    AppLogger.log(error);                                
-                }
+            try {
+                Path inputFile = this.outputPath.resolve(file) ;
                 
-            
-            }, executor);           
-            
+                if (Files.notExists(inputFile)) {                    
+                    throw new Exception( String.format("Arquivo %s não encontrado.", file) );
+                }
+
+                String text = Files.readString(inputFile);
+                
+                saveTextInFile(outPutFileName, text);
+                
+            } catch (Exception e) {
+                String error = String.format("Erro ao gerar o arquivo '%s': %s", outPutFileName, e.getMessage());
+        
+                AppLogger.log(error);                                
+            }           
 
         }
 
-        return String.format("Arquivo %s gerado.", fileName);        
+        return String.format("Arquivo %s gerado.", outPutFileName);        
        
     }
 
