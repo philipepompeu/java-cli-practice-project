@@ -1,5 +1,6 @@
 package com.philipe.app.commands;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -18,6 +19,8 @@ import java.util.stream.Stream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 
@@ -314,32 +317,52 @@ public class FileManipulationCommand {
     }
 
     @ShellMethod(key = "compress-files", value = "Junta N arquivos num único arquivo.")
-    public String compressFiles(String outPutFileName, String... filesToBeCompressed) {
+    public String compressFiles(String outputFileName, String... filesToBeCompressed) {
+       
+        Path tarPath = this.outputPath.resolve(outputFileName + ".tar");
+        Path tarGzPath = this.outputPath.resolve(outputFileName + ".tar.gz");
 
-        
-        try (GZIPOutputStream gzipOut = new GZIPOutputStream(new FileOutputStream(this.outputPath.resolve(outPutFileName).toString()))) {
-            
-            for(String file : filesToBeCompressed){            
-                
-                Path inputFile = this.outputPath.resolve(file) ;
-                
-                if (Files.notExists(inputFile)) {                    
-                    throw new Exception( String.format("Arquivo %s não encontrado.", file) );
+        try {
+
+            try (TarArchiveOutputStream tarOut = new TarArchiveOutputStream(new FileOutputStream(tarPath.toFile()))) {
+                // Adiciona cada arquivo ao TAR
+                for (String file : filesToBeCompressed) {
+                    Path inputFile = this.outputPath.resolve(file);
+                    
+                    if (Files.notExists(inputFile)) {
+                        throw new Exception(String.format("Erro: Arquivo '%s' não encontrado.", file));                        
+                    }
+    
+                    addFileToTar(tarOut, inputFile.toFile());
                 }
-
-                gzipOut.write(Files.readAllBytes(inputFile));                    
             }
-            gzipOut.close();            
 
-        } catch (Exception e) {
+            this.compressFile(tarGzPath.toString(), tarPath.toString());// Agora compacta o TAR para TAR.GZ            
+            this.deleteFile(tarPath.toString());// Exclui o TAR intermediário para manter apenas o .tar.gz            
             
-            String error = String.format("Erro ao gerar o arquivo '%s': %s", outPutFileName, e.getMessage());
-        
+        } catch (Exception e) {
+            String error = String.format("Erro ao gerar compactar arquivos: %s", e.getMessage());        
             AppLogger.log(error);   
+        }        
+
+        return String.format("Arquivo compactado %s gerado com sucesso.", tarGzPath.toAbsolutePath());
+    }
+    
+    private void addFileToTar(TarArchiveOutputStream tarOut, File file) throws IOException {
+        TarArchiveEntry entry = new TarArchiveEntry(file, file.getName());
+        entry.setSize(file.length());
+        tarOut.putArchiveEntry(entry);
+
+        try (FileInputStream fis = new FileInputStream(file)) {
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = fis.read(buffer)) > 0) {
+                tarOut.write(buffer, 0, length);
+            }
         }
 
-        return String.format("Arquivo %s descompactado.", outPutFileName);        
-       
+        tarOut.closeArchiveEntry();
     }
+
 
 }

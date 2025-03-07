@@ -51,6 +51,12 @@
 			<artifactId>spring-shell-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-compress</artifactId>
+			<version>1.21</version>
+		</dependency>
+
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>
