@@ -14,10 +14,10 @@ jobs:
 
     steps:
       - name: Checkout do código
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Configurar JDK 17
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
@@ -28,7 +28,7 @@ jobs:
 
       - name: Armazenar resultados dos testes em caso de falha
         if: failure()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test-results
           path: target/surefire-reports/
@@ -40,7 +40,7 @@ jobs:
 
     steps:
       - name: Checkout do código
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Login no Docker Hub
         run: docker login -u ${{secrets.docker_hub_username}} -p ${{secrets.docker_hub_pwd}}
