@@ -34,7 +34,7 @@ jobs:
           name: test-results
           path: app/target/surefire-reports/
 
-  docker:
+  publish-to-docker-hub:
     needs: build
     runs-on: ubuntu-latest
     if: success()
