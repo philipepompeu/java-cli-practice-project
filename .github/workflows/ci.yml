@@ -25,13 +25,14 @@ jobs:
 
       - name: Construir e rodar testes
         run: mvn clean install
+        working-directory: app
 
       - name: Armazenar resultados dos testes em caso de falha
         if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: test-results
-          path: target/surefire-reports/
+          path: app/target/surefire-reports/
 
   docker:
     needs: build
@@ -44,9 +45,12 @@ jobs:
 
       - name: Login no Docker Hub
         run: docker login -u ${{secrets.docker_hub_username}} -p ${{secrets.docker_hub_pwd}}
+        working-directory: app
 
       - name: Construir a imagem Docker
         run: docker build -t ${{ secrets.docker_hub_username }}/java-cli-practice-project:latest .
+        working-directory: app
 
       - name: Publicar imagem no Docker Hub
         run: docker push ${{ secrets.docker_hub_username }}/java-cli-practice-project:latest
+        working-directory: app
