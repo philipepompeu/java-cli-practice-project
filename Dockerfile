@@ -1,5 +1,5 @@
 # Usa uma imagem base com JDK 17
-FROM eclipse-temurin:17-jdk AS builder
+FROM maven:3.9-eclipse-temurin-17 AS builder
 
 # Define o diretório de trabalho
 WORKDIR /app
