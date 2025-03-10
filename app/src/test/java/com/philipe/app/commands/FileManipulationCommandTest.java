@@ -257,6 +257,28 @@ class FileManipulationCommandTest {
         assertTrue(content.contains("Tempo com parallelStream"));        
         
     }
+    
+    @Test
+    void generateReport_ShouldGenerateReportBasedOnCSVFile() {
+        
+        String fileName = "report.csv";
+
+        String contentToWrite = IntStream.rangeClosed(1, 99)
+                                            .mapToObj(number -> String.format("produto%s;%d;%d\n", (number % 2==0) ? "01": "02", number, number*2) )
+                                            .collect(Collectors.joining());
+        
+        command.saveTextInFile(fileName, contentToWrite);        
+
+        String content = command.generateReport(fileName);
+        
+
+        assertTrue(content.contains("Relatorio de Vendas"));
+        assertTrue(content.contains("unidades"));
+        assertTrue(content.contains("R$"));
+        assertTrue(content.contains("produto01"));
+        assertTrue(content.contains("produto02"));
+        
+    }
 }
 
 
