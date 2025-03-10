@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -239,6 +240,22 @@ class FileManipulationCommandTest {
 
         assertTrue(content.contains(fileName));        
         assertEquals(expectedContent, contentAfterSort);
+    }
+
+    @Test
+    void benchmark_ShouldCalculateHowLongItTakesToReadAFileWithParallelStream() {
+        
+        String fileName = "benchmark.txt";        
+        String contentToWrite = IntStream.rangeClosed(1, 1200).mapToObj(number -> String.format("Linha %d \n", number) ).collect(Collectors.joining());
+        
+        command.saveTextInFile(fileName, contentToWrite);
+        
+
+        String content = command.benchmark(fileName);
+        
+
+        assertTrue(content.contains("Tempo com parallelStream"));        
+        
     }
 }
 
