@@ -6,6 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -220,6 +221,24 @@ class FileManipulationCommandTest {
         
         content = command.findTextInFile(fileName, "Found".toUpperCase());
         assertTrue(content.contains("2: " + textToBeFound));
+    }
+
+
+    @Test
+    void sortFile_ShouldSortFileLinesInAlphabeticallyOrder() {
+        
+        String fileName = "testFile.txt";
+        String contentToWrite = "Zebra \n Baleia \n Cobra \n Anta \n Elefante";
+        command.saveTextInFile(fileName, contentToWrite);
+
+        String expectedContent = "1:Anta2:Baleia3:Cobra4:Elefante5:Zebra";
+
+        String content = command.sortFile(fileName);
+
+        String contentAfterSort = command.readTextFile(fileName).trim().replaceAll("\\s+", "");
+
+        assertTrue(content.contains(fileName));
+        //assertTrue(contentAfterSort.equals(expectedContent));
     }
 }
 

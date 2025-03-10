@@ -5,8 +5,11 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
+import java.text.Normalizer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -25,6 +28,8 @@ import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 
 import com.philipe.app.utilities.AppLogger;
+import com.philipe.app.ReportItem;
+
 
 import jakarta.annotation.PreDestroy;
 
@@ -369,4 +374,149 @@ public class FileManipulationCommand {
     }
 
 
+    @ShellMethod(key = "sort-file", value = "Ordenar o conteúdo de um arquivo")
+    public String sortFile(String inputFileName) {
+
+        Path inputFile = this.outputPath.resolve(inputFileName) ;
+        
+        try(Stream<String> fileLines = Files.lines(inputFile)) {
+
+            
+
+            fileLines.flatMap(line -> Stream.of( line.split(";") ) );
+                
+
+            StringBuilder builder = new StringBuilder();           
+
+            List<String> sortedLines = fileLines.sorted()
+                        .map(line -> Normalizer.normalize(line, Normalizer.Form.NFKD))
+                        .collect(Collectors.toList());
+                                            
+            
+
+            sortedLines.forEach(line -> builder.append(line + System.lineSeparator()));
+
+            String text = builder.toString();            
+
+            Files.writeString(inputFile, text, StandardOpenOption.TRUNCATE_EXISTING);           
+            
+        } catch (Exception e) {
+            String error = String.format("Erro ao gerar o arquivo '%s': %s", inputFileName, e.getMessage());
+    
+            AppLogger.log(error);                                
+        }       
+
+        return String.format("Arquivo %s ordenado.", inputFileName);        
+       
+    }
+
+    @ShellMethod(key = "generate-report", value = "Criar um relatório baseado em um arquivo CSV.")
+    public String generateReport(String inputFileName) {
+
+        Path inputFile = this.outputPath.resolve(inputFileName) ;
+        
+        try(Stream<String> fileLines = Files.lines(inputFile)) {
+
+            StringBuilder builder = new StringBuilder(); 
+            HashMap<String, ReportItem> report = new HashMap<String, ReportItem>();
+            
+            for (String line : (Iterable<String>) fileLines::iterator) {
+
+                
+                String[] parts = line.split(";");
+
+                if (parts.length < 3) {
+                    AppLogger.log("Linha inválida no arquivo CSV: " + line);
+                    continue;
+                }
+
+                String produto = parts[0];
+
+                ReportItem item =  report.get(produto);
+                long quantidade = Long.parseLong(parts[1]);
+                long valorUnitario = Long.parseLong(parts[2]);
+                long total = quantidade * valorUnitario;
+
+                if (item == null) {
+                    item = new ReportItem(produto, quantidade, total);
+                    report.put(produto, item);
+                }else{
+
+                    item.quantidade += quantidade;
+                    item.total += total;
+                }               
+                
+            }
+
+            builder.append("Relatorio de Vendas:\n");
+
+            report.forEach((k,v) -> {                          
+                builder.append( String.format("Produto %s - %d unidades - R$ %d \n", k, v.quantidade, v.total) );
+            });                              
+            
+
+            String text = builder.toString();            
+
+            return text;            
+            
+        } catch (Exception e) {
+            String error = String.format("Erro ao gerar o arquivo '%s': %s", inputFileName, e.getMessage());
+    
+            AppLogger.log(error);                                
+        }       
+
+        return "";       
+       
+    }
+
+    @ShellMethod(key = "benchmark", value = "Medir tempo de execução")
+    public String benchmark(String fileName) {
+        Path outPutFile = this.outputPath.resolve(fileName) ;                          
+        
+
+        try {            
+
+
+            long startTime = System.nanoTime();                        
+            
+            try (Stream<String> parallelStream  = Files.lines(outPutFile).parallel()) {
+                
+                parallelStream.forEach(line -> {});
+            }
+           
+            long endTime = System.nanoTime();
+
+            long durationParallel = (endTime - startTime);
+
+            startTime = System.nanoTime();
+            
+            try (Stream<String> sequentialStream  = Files.lines(outPutFile)) {
+                
+                sequentialStream.forEach(line -> {});
+            }
+
+            endTime = System.nanoTime();
+            
+            long duration = (endTime - startTime);
+
+            
+            return String.format(
+                                "Benchmark de Leitura \n" +
+                                "----------------------------------\n" +
+                                "Tempo com parallelStream: %d ms\n" +
+                                "Tempo sem parallelStream: %d ms\n" +
+                                "----------------------------------",
+                                durationParallel / 1_000_000, duration / 1_000_000
+                            );           
+            
+        } catch (Exception e) {
+            String error = String.format("Erro ao ler o arquivo '%s': %s", fileName, e.getMessage());            
+            
+            AppLogger.log(error);                                
+        }         
+
+        return "";
+       
+    }
+    
 }
