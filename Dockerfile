@@ -5,7 +5,7 @@ FROM openjdk:17-jdk-slim as builder
 WORKDIR /app
 
 # Copia o arquivo JAR gerado pelo Maven
-COPY /target/app-shell.jar app-shell.jar
+COPY app/target/app-shell.jar app-shell.jar
 
 # Comando para executar a aplicação
 ENTRYPOINT ["java", "-jar", "app-shell.jar"]
