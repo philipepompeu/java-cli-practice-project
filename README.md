@@ -1,3 +1,5 @@
+![Build](https://github.com/philipepompeu/java-cli-practice-project/actions/workflows/ci.yml/badge.svg)
+
 # Java CLI Practice Project
 
 ## 📌 Objetivo
