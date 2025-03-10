@@ -237,8 +237,8 @@ class FileManipulationCommandTest {
 
         String contentAfterSort = command.readTextFile(fileName).trim().replaceAll("\\s+", "");
 
-        assertTrue(content.contains(fileName));
-        //assertTrue(contentAfterSort.equals(expectedContent));
+        assertTrue(content.contains(fileName));        
+        assertEquals(expectedContent, contentAfterSort);
     }
 }
 

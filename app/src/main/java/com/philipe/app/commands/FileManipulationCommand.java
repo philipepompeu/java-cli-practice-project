@@ -381,24 +381,16 @@ public class FileManipulationCommand {
         
         try(Stream<String> fileLines = Files.lines(inputFile)) {
 
-            
+            StringBuilder builder = new StringBuilder();        
 
-            fileLines.flatMap(line -> Stream.of( line.split(";") ) );
-                
-
-            StringBuilder builder = new StringBuilder();           
-
-            List<String> sortedLines = fileLines.sorted()
-                        .map(line -> Normalizer.normalize(line, Normalizer.Form.NFKD))
-                        .collect(Collectors.toList());
-                                            
-            
-
-            sortedLines.forEach(line -> builder.append(line + System.lineSeparator()));
+            fileLines.sorted()
+                    .map(line -> Normalizer.normalize(line, Normalizer.Form.NFKD))
+                    .collect(Collectors.toList())
+                    .forEach(line -> builder.append(line + System.lineSeparator()));
 
             String text = builder.toString();            
 
-            Files.writeString(inputFile, text, StandardOpenOption.TRUNCATE_EXISTING);           
+            Files.writeString(inputFile, text, StandardOpenOption.CREATE);           
             
         } catch (Exception e) {
             String error = String.format("Erro ao gerar o arquivo '%s': %s", inputFileName, e.getMessage());
