@@ -510,5 +510,32 @@ public class FileManipulationCommand {
         return "";
        
     }
+
     
+    @ShellMethod(key = "parallel-search", value = "Busca paralela de palavras em múltiplos arquivos ao mesmo tempo.")
+    public String parallelSearchInDirectory(String textToBeFound, String directory) {
+        Path outputDir = this.outputPath.resolve(directory);
+
+        
+        String searchUpper  = textToBeFound.toUpperCase();
+        try {        
+            System.out.println(outputDir.toAbsolutePath().toString())    ;
+            if (!Files.isDirectory(outputDir)) {
+                throw new Exception("Não é um diretório válido.");
+            }
+            
+            return Files.list(outputDir)
+                    .parallel()
+                    .filter(path -> (!Files.isDirectory(path)))
+                    .map(path -> this.findTextInFile(path.toAbsolutePath().toString(), searchUpper))
+                    .collect(Collectors.joining(System.lineSeparator()));               
+
+            
+        } catch (Exception e) {
+            String error = String.format("Erro ao ler o arquivo '%s': %s", directory, e.getMessage());
+            
+            AppLogger.log(error);            
+            return error;
+        }
+    }
 }
