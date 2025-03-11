@@ -15,6 +15,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -536,5 +537,53 @@ public class FileManipulationCommand {
             AppLogger.log(error);            
             return error;
         }
+    }
+
+
+    @ShellMethod(key = "uppercase", value = "Conteúdo do arquivo para maiúsculo.")
+    public String upperCaseFile(String inputFileName){
+        String newFileName = upperOrLowerCaseFile(inputFileName, true);
+        return String.format("Arquivo %s teve seu conteúdo convertido para maiúsculo salvo no arquivo %s", inputFileName, newFileName);
+    }
+    
+    @ShellMethod(key = "lowercase", value = "Conteúdo do arquivo para minusculo.")
+    public String lowerCaseFile(String inputFileName){
+
+        String newFileName = upperOrLowerCaseFile(inputFileName, false);
+        return String.format("Arquivo %s teve seu conteúdo convertido para minusculo salvo no arquivo %s", inputFileName, newFileName);
+    }
+
+    public String upperOrLowerCaseFile(String inputFileName, boolean upperCase) {
+
+        Path inputFile = this.outputPath.resolve(inputFileName);
+
+        Function<String, String> toUpperCaseFunction = line -> line.toUpperCase();
+        Function<String, String> toLowerCaseFunction = line -> line.toLowerCase();
+        Function<String, String> mapper = upperCase ? toUpperCaseFunction : toLowerCaseFunction;
+
+        boolean hasExension = inputFileName.contains(".");
+        String nameWithoutExtension = hasExension ? inputFileName.substring(0, inputFileName.lastIndexOf('.')) : inputFileName;
+        String extension = hasExension ? inputFileName.substring(inputFileName.lastIndexOf('.')) : "";
+
+        
+        try(Stream<String> fileLines = Files.lines(inputFile)) {
+            
+
+            String text = fileLines.map(mapper).collect(Collectors.joining("\n"));            
+            
+            String newFileName = String.format("%s_converted%s", nameWithoutExtension, extension);
+            
+            Files.writeString(this.outputPath.resolve(newFileName), text, StandardOpenOption.CREATE);
+
+            return newFileName;
+            
+        } catch (Exception e) {
+            String error = String.format("Erro ao gerar o arquivo '%s': %s", inputFileName, e.getMessage());
+    
+            AppLogger.log(error);                                
+        }       
+
+        return "";
+       
     }
 }

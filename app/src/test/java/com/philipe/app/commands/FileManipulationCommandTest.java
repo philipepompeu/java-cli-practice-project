@@ -313,6 +313,44 @@ class FileManipulationCommandTest {
         
         
     }
+
+    @Test
+    void upperCaseFile_ShouldConvertFileToUpperCase() throws IOException {
+        
+        String fileName = "upperCaseFile.txt";
+        String contentToWrite = "pneumonoultramicroscopicsilicovolcanoconiosis";
+        command.saveTextInFile(fileName, contentToWrite);
+
+        String expectedContent = contentToWrite.toUpperCase();
+
+        String content = command.upperCaseFile(fileName);
+        
+        Path convertedFile = Paths.get("output").resolve("upperCaseFile_converted.txt");        
+
+        assertTrue(content.contains(fileName));        
+        assertTrue(content.contains("upperCaseFile_converted.txt"));        
+        assertTrue(Files.exists(convertedFile));        
+        assertEquals(Files.readString(convertedFile), expectedContent);
+    }
+    
+    @Test
+    void lowerCaseFile_ShouldConvertFileToLowerCase() throws IOException {
+        
+        String fileName = "lowerCaseFile.txt";
+        String contentToWrite = "PNEUMONOULTRAMICROSCOPICSILICOVOLCANOCONIOSIS";
+        command.saveTextInFile(fileName, contentToWrite);
+
+        String expectedContent = contentToWrite.toLowerCase();
+
+        String content = command.lowerCaseFile(fileName);
+        
+        Path convertedFile = Paths.get("output").resolve("lowerCaseFile_converted.txt");        
+
+        assertTrue(content.contains(fileName));        
+        assertTrue(content.contains("lowerCaseFile_converted.txt"));        
+        assertTrue(Files.exists(convertedFile));        
+        assertEquals(Files.readString(convertedFile), expectedContent);
+    }
 }
 
 
