@@ -1,4 +1,4 @@
-package com.philipe.app;
+package com.philipe.app.classes;
 
 public class ReportItem {
 

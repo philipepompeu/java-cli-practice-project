@@ -27,9 +27,8 @@ import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 
+import com.philipe.app.classes.ReportItem;
 import com.philipe.app.utilities.AppLogger;
-import com.philipe.app.ReportItem;
-
 
 import jakarta.annotation.PreDestroy;
 
