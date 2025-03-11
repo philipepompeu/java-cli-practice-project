@@ -6,6 +6,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -277,6 +279,38 @@ class FileManipulationCommandTest {
         assertTrue(content.contains("R$"));
         assertTrue(content.contains("produto01"));
         assertTrue(content.contains("produto02"));
+        
+    }
+
+    @Test
+    void parallelSearch_ShouldSearchTextInEntireDirectory() throws IOException {
+        String testeDir = "output/testeDir";
+        
+        Path outPutDir = Files.createDirectories(Paths.get(testeDir));
+
+        String fileName = "parallelSearch%d.txt";
+        String contentToWrite = "Zebra \n Baleia \n Cobra \n Anta \n Elefante";       
+        
+
+        IntStream.rangeClosed(1, 5)
+                    .forEach(n ->  {
+                        System.out.println(n);
+                        try {
+                            String file = String.format(fileName, n);
+                            System.out.println(file);
+                            Files.writeString(outPutDir.resolve(file), contentToWrite, StandardOpenOption.CREATE);
+                        } catch (IOException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                    } );       
+        
+        
+
+        String content = command.parallelSearchInDirectory("Cobra", "testeDir/");        
+
+        assertTrue(content.contains("3:  Cobra"));
+        
         
     }
 }
