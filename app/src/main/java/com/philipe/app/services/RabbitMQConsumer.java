@@ -21,7 +21,7 @@ public class RabbitMQConsumer {
     public String receive(String queueName){ 
 
         Optional<Message> message = Optional.ofNullable(rabbitTemplate.receive(queueName));
-
-        return message.isPresent() ? new String(message.get().getBody()) : "Nenhuma mensagem na fila.";        
+        
+        return message.isPresent() ? new String(message.get().getBody()) : "";        
     }
 }
