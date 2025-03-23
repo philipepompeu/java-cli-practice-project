@@ -22,6 +22,11 @@ import com.philipe.app.config.RabbitMQConfig;
 import com.philipe.app.services.RabbitMQConsumer;
 import com.philipe.app.services.RabbitMQProducer;
 
+import org.springframework.context.annotation.Import;
+
+import com.philipe.app.config.TestConfig;
+
+@Import(TestConfig.class) 
 @SpringBootTest
 public class QueueManagerCommandTest {
 

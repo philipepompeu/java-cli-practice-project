@@ -55,6 +55,6 @@ public class QueueManagerCommand {
         }while(validMsg);        
         
         
-        return result + "\nProcessamento da fila concluído.";
+        return result + "\nProcessamento da fila concluÃ­do.";
     }
 }
