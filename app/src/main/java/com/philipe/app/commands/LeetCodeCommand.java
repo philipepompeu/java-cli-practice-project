@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Stack;
 import java.util.function.IntSupplier;
 import java.util.stream.Collectors;
@@ -57,10 +58,14 @@ public class LeetCodeCommand {
     public List<List<Integer>> pascalTriangule(int numRows) {
 
         List<ArrayList<Integer>> triangle = IntStream.range(0, numRows)
-                                            .mapToObj(num -> Collections.nCopies(num + 1, 1))
-                                            .map(ArrayList::new)
-                                            .toList();
-        
+                                            .mapToObj(i -> {
+                                                ArrayList<Integer> row = new ArrayList<>();
+                                                for (int j = 0; j <= i; j++) {
+                                                    row.add(1);
+                                                }
+                                                return row;
+                                            })                                            
+                                            .toList();        
 
         for (int i = 2; i < numRows; i++) {    
             
@@ -72,7 +77,28 @@ public class LeetCodeCommand {
         }
 
 
-        return triangle.stream().collect(Collectors.toList());
+        return new ArrayList<>(triangle);
+        
+    }
+
+    public int[] unionOfTwoSets(int[] nums1, int[] nums2) {        
+
+        Set<Integer> unionSet = Arrays.stream(nums1)
+                                    .boxed()
+                                    .collect(Collectors.toSet());
+
+        for(int i : nums2) {
+            if (!unionSet.contains(i)) {
+                unionSet.add(i);
+            }            
+        }       
+
+        int[] result = unionSet.stream().mapToInt(o -> (Integer)o).toArray();
+        
+        Arrays.sort(result);
+
+        return result;
+        
         
     }
     

@@ -1,5 +1,6 @@
 package com.philipe.app.commands;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -75,6 +76,15 @@ public class LeetCodeCommandTest {
         
         result = command.pascalTriangule(1);        
         assertEquals(List.of(List.of(1)), result);       
+        
+    }
+    
+    @Test
+    void unionOfTwoSets(){  
+        
+        int[] result = command.unionOfTwoSets(new int[]{1, 2, 3}, new int[]{2, 3, 4});       
+        
+        assertArrayEquals(new int[]{1,2,3,4}, result);         
         
     }
 }
