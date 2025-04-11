@@ -1,5 +1,6 @@
 package com.philipe.app.commands;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -54,5 +55,26 @@ public class LeetCodeCommandTest {
         assertTrue(command.validParentheses("([])"));        
         
         assertFalse(command.validParentheses("([)]"));        
+    }
+    
+    @Test
+    void pascalTriangule(){  
+        
+        List<List<Integer>> result = command.pascalTriangule(5);
+
+        List<List<Integer>> expected = List.of(
+                                            List.of(1),
+                                            List.of(1, 1),
+                                            List.of(1, 2, 1),
+                                            List.of(1, 3, 3, 1),
+                                            List.of(1, 4, 6, 4, 1)
+                                        );
+        
+        assertTrue(result.size() == 5); 
+        assertEquals(expected, result);       
+        
+        result = command.pascalTriangule(1);        
+        assertEquals(List.of(List.of(1)), result);       
+        
     }
 }

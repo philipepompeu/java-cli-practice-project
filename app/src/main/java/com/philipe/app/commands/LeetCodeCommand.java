@@ -2,10 +2,14 @@ package com.philipe.app.commands;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+import java.util.function.IntSupplier;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.springframework.shell.standard.ShellComponent;
 
@@ -49,5 +53,27 @@ public class LeetCodeCommand {
         return stack.isEmpty();
     }
 
+
+    public List<List<Integer>> pascalTriangule(int numRows) {
+
+        List<ArrayList<Integer>> triangle = IntStream.range(0, numRows)
+                                            .mapToObj(num -> Collections.nCopies(num + 1, 1))
+                                            .map(ArrayList::new)
+                                            .toList();
+        
+
+        for (int i = 2; i < numRows; i++) {    
+            
+            ArrayList<Integer> previousRow = triangle.get(i-1);
+            ArrayList<Integer> currentRow = triangle.get(i);
+            for (int j = 1; j < currentRow.size()-1; j++) {
+                currentRow.set(j, previousRow.get(j-1)+previousRow.get(j));                
+            }
+        }
+
+
+        return triangle.stream().collect(Collectors.toList());
+        
+    }
     
 }
