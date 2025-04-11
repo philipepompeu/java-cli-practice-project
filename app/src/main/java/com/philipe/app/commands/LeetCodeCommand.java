@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import java.util.Stack;
 
 import org.springframework.shell.standard.ShellComponent;
 
@@ -30,23 +30,23 @@ public class LeetCodeCommand {
 
     public boolean validParentheses(String s){
 
-        String open = "([{";
-        String close = ")]}";
+        Stack<Character> stack = new Stack<>();
+        Map<Character, Character> pairs = Map.of(
+            ')', '(', 
+            ']', '[', 
+            '}', '{'
+        );
 
-        int count = 0;
         for (char c : s.toCharArray()) {
-            
-            
-            if (open.indexOf(c) > 0) {
-                count++;
-            } else if (close.indexOf(c) > 0) {
-                count--;
-            }
-            if (count < 0) {
-                return false;
+            if (pairs.containsValue(c)) {
+                stack.push(c);
+            } else if (pairs.containsKey(c)) {
+                if (stack.isEmpty() || stack.pop() != pairs.get(c)) {
+                    return false;
+                }
             }
         }
-        return count == 0;
+        return stack.isEmpty();
     }
 
     
