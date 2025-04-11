@@ -28,5 +28,26 @@ public class LeetCodeCommand {
         return new ArrayList<>(groups.values());     
     }
 
+    public boolean validParentheses(String s){
+
+        String open = "([{";
+        String close = ")]}";
+
+        int count = 0;
+        for (char c : s.toCharArray()) {
+            
+            
+            if (open.indexOf(c) > 0) {
+                count++;
+            } else if (close.indexOf(c) > 0) {
+                count--;
+            }
+            if (count < 0) {
+                return false;
+            }
+        }
+        return count == 0;
+    }
+
     
 }

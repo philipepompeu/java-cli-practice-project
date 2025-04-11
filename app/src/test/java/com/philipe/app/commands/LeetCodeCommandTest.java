@@ -1,5 +1,6 @@
 package com.philipe.app.commands;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
@@ -42,5 +43,16 @@ public class LeetCodeCommandTest {
         
         assertTrue(result.stream().anyMatch(e -> Arrays.asList("", "").equals(e) ));        
         
+    }
+
+
+    @Test
+    void validParentheses(){        
+        assertTrue(command.validParentheses("()"));        
+        assertTrue(command.validParentheses("()[]{}"));          
+        assertFalse(command.validParentheses("(]"));        
+        assertTrue(command.validParentheses("([])"));        
+        
+        assertFalse(command.validParentheses("([)]"));        
     }
 }
