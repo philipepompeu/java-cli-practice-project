@@ -13,6 +13,8 @@ import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import net.bytebuddy.build.HashCodeAndEqualsPlugin.Sorted;
+
 public class LeetCodeCommandTest {
     
     private LeetCodeCommand command;
@@ -86,5 +88,71 @@ public class LeetCodeCommandTest {
         
         assertArrayEquals(new int[]{1,2,3,4}, result);         
         
+    }
+
+
+    @Test
+    void mergeSortedArray1(){
+        int[] nums1 = new int[] {1,2,3,0,0,0};
+        int m = 3;
+        
+        int[] nums2 = new int[] {2,5,6};
+        int n = 3;
+
+        command.merge(nums1, m, nums2, n);
+
+        assertArrayEquals(new int[]{1,2,2,3,5,6}, nums1);
+
+    }
+    
+    @Test
+    void mergeSortedArray2(){
+        int[] nums1 = new int[] {1};
+        int m = 1;
+        
+        int[] nums2 = new int[] {};
+        int n = 0;
+
+        command.merge(nums1, m, nums2, n);
+
+        assertArrayEquals(new int[]{1}, nums1);
+
+    }
+    
+
+    @Test
+    void majorityCount(){
+        assertEquals(3, command.majorityElement(new int[] {3,2,3}));
+        assertEquals(2, command.majorityElement(new int[] {2,2,1,1,1,2,2}));
+
+    }
+
+
+    @Test
+    void removeDuplicates(){       
+
+        int expected = 5;
+        int[] input = new int[]{1,1,1,2,2,3};
+        
+        int result = command.removeDuplicates(input);
+
+        assertEquals(expected, result);        
+        
+        assertArrayEquals(new int[]{1,1,2,2,3}, Arrays.copyOfRange(input, 0, result));
+
+    }
+    
+    @Test
+    void removeDuplicates2(){       
+
+        int expected = 7;
+        int[] input = new int[]{0,0,1,1,1,1,2,3,3};
+        
+        int result = command.removeDuplicates(input);
+
+        assertEquals(expected, result);        
+        
+        assertArrayEquals(new int[]{0,0,1,1,2,3,3}, Arrays.copyOfRange(input, 0, result));
+
     }
 }

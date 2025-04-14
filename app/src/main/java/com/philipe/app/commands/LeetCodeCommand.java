@@ -101,5 +101,62 @@ public class LeetCodeCommand {
         
         
     }
+
+    public void merge(int[] nums1, int m, int[] nums2, int n) {
+        
+        for (int i = 0; i < n; i++) {
+            nums1[m + i] = nums2[i];
+        }
+        Arrays.sort(nums1);
+    }
+
+    public int majorityElement(int[] nums) {
+
+        Map<Integer, Integer> countMap = new HashMap<>();
+
+        int majorityCount = nums.length / 2;
+
+        for (int i : nums) {
+            
+            if (!countMap.containsKey(i)) {
+                countMap.put(i, 0);
+            }
+            countMap.put(i, countMap.get(i)+1);
+            
+            if (countMap.get(i) > majorityCount) {
+                return i;
+            }
+        }
+
+        return 0;
+        
+    }
+
+    public int removeDuplicates(int[] nums) {
+        
+        Map<Integer, Integer> countMap = new HashMap<>(); 
+        
+        int length = nums.length;
+
+        for (int i = 0; i < nums.length; i++) {
+            int num = nums[i];
+            if (!countMap.containsKey(num)) {
+                countMap.put(num, 0);
+            }
+            countMap.put(num, countMap.get(num)+1);
+            
+            if (countMap.get(num) > 2) {
+                nums[i] = -1;
+                length--;
+            }            
+
+            if (i > 0 && nums[i-1] == -1) {
+                nums[i-1] = nums[i];
+                nums[i] = -1;                
+            }
+        }
+
+        return length;
+    }
     
 }
