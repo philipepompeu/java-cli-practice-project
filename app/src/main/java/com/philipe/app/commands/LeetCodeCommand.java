@@ -144,5 +144,39 @@ public class LeetCodeCommand {
         }
         return write;
     }
+
+    public void rotate(int[] nums, int k) {
+
+        int[] copyOfNums = Arrays.copyOf(nums, nums.length);
+        int n = nums.length;
+
+        for(int i = 0; i< nums.length; i++) {
+            int newIndex = (i + k) % n;
+            
+            nums[newIndex] = copyOfNums[i];
+        }
+    }
+
+
+    public int maxProfit(int[] prices) {
+        
+        int maxProfit = 0;
+
+        for (int i = 0; i< prices.length; i++) {
+            int buyingPrice = prices[i];
+
+            for(int j=i+1; j< prices.length; j++) {
+                int sellingPrice = prices[j];
+                
+                int profit = sellingPrice - buyingPrice;                
+                
+                if (profit > maxProfit) {
+                    maxProfit = profit;
+                }
+            }
+        }       
+        
+        return maxProfit;
+    }
     
 }

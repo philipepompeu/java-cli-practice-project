@@ -155,4 +155,45 @@ public class LeetCodeCommandTest {
         assertArrayEquals(new int[]{0,0,1,1,2,3,3}, Arrays.copyOfRange(input, 0, result));
 
     }
+    
+    @Test
+    void rotate(){           
+
+        
+        int[] input = new int[]{1,2,3,4,5,6,7};
+        
+        command.rotate(input, 3);        
+        
+        assertArrayEquals(new int[]{5,6,7,1,2,3,4}, input);
+        
+
+    }
+    @Test
+    void rotate2(){                 
+        
+        
+        int[] onePositionInput = new int[]{-1};
+        command.rotate(onePositionInput, 3);
+
+        assertArrayEquals(new int[]{-1}, onePositionInput);
+
+    }
+
+    @Test
+    void maxProfit(){           
+
+        int expected = 5;
+        int[] input = new int[]{7,1,5,3,6,4};
+        
+        int result = command.maxProfit(input);
+
+        assertEquals(expected, result);
+        
+        assertEquals(0, command.maxProfit(new int[]{7,6,4,3,1}));
+
+        
+        
+        
+
+    }
 }
