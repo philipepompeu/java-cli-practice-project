@@ -162,21 +162,40 @@ public class LeetCodeCommand {
         
         int maxProfit = 0;
 
-        for (int i = 0; i< prices.length; i++) {
-            int buyingPrice = prices[i];
+        int cheapest = Integer.MAX_VALUE;
 
-            for(int j=i+1; j< prices.length; j++) {
-                int sellingPrice = prices[j];
-                
-                int profit = sellingPrice - buyingPrice;                
-                
-                if (profit > maxProfit) {
-                    maxProfit = profit;
-                }
+        for(int price : prices){
+            if (cheapest > price) {
+                cheapest = price;
             }
-        }       
+
+            int profit = price - cheapest;
+            if (profit > maxProfit) {
+                maxProfit = profit;
+            }
+        }          
         
         return maxProfit;
+    }
+
+    public int[] productExceptSelf(int[] nums) {
+        
+        int n = nums.length;
+        int[] result = new int[n];        
+
+        int calc = 1;
+        for (int i = 0; i < n;i++){
+            result[i] = calc;
+            calc *= nums[i];
+        }
+        
+        int suffix = 1;
+        for (int i = n-1; i >= 0;i--){            
+            result[i]*=suffix;
+            suffix *= nums[i];
+        }
+
+        return result;
     }
     
 }

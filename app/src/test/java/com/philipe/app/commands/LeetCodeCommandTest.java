@@ -191,9 +191,17 @@ public class LeetCodeCommandTest {
         
         assertEquals(0, command.maxProfit(new int[]{7,6,4,3,1}));
 
+    }
+
+    @Test
+    void productExceptSelf(){                 
         
         
-        
+        int[] input = new int[]{1,2,3,4};
+
+        int[]output = command.productExceptSelf(input);
+
+        assertArrayEquals(new int[]{24,12,8,6}, output);
 
     }
 }
