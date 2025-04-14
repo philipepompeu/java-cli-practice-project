@@ -134,29 +134,15 @@ public class LeetCodeCommand {
 
     public int removeDuplicates(int[] nums) {
         
-        Map<Integer, Integer> countMap = new HashMap<>(); 
-        
-        int length = nums.length;
-
-        for (int i = 0; i < nums.length; i++) {
-            int num = nums[i];
-            if (!countMap.containsKey(num)) {
-                countMap.put(num, 0);
-            }
-            countMap.put(num, countMap.get(num)+1);
-            
-            if (countMap.get(num) > 2) {
-                nums[i] = -1;
-                length--;
-            }            
-
-            if (i > 0 && nums[i-1] == -1) {
-                nums[i-1] = nums[i];
-                nums[i] = -1;                
+        int write = 0; // posição onde vamos gravar
+        for (int read = 0; read < nums.length; read++) {
+            // Aceita os dois primeiros elementos normalmente
+            if (write < 2 || nums[read] != nums[write - 2]) {
+                nums[write] = nums[read];
+                write++;
             }
         }
-
-        return length;
+        return write;
     }
     
 }

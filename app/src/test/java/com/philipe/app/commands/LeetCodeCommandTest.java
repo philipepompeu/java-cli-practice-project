@@ -143,7 +143,7 @@ public class LeetCodeCommandTest {
     }
     
     @Test
-    void removeDuplicates2(){       
+    void removeDuplicates2(){           
 
         int expected = 7;
         int[] input = new int[]{0,0,1,1,1,1,2,3,3};
