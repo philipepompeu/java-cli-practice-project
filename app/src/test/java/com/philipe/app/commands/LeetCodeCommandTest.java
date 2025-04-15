@@ -229,6 +229,7 @@ public class LeetCodeCommandTest {
     void longestCommonPrefix() {
         
         assertEquals("fl", command.longestCommonPrefix(new String[]{"flower","flow","flight"}));
-        assertEquals("", command.longestCommonPrefix(new String[]{"dog","racecar","car"}));
+        assertEquals("", command.longestCommonPrefix(new String[]{"dog","racecar","car"})); 
+        assertEquals("a", command.longestCommonPrefix(new String[]{"a"}));
     }
 }
