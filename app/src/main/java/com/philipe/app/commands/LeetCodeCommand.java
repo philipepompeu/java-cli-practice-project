@@ -283,18 +283,16 @@ public class LeetCodeCommand {
     public boolean isPalindrome(String s) {
 
         String clean = s.toUpperCase().replaceAll("[^a-zA-Z0-9]","");
-
-        char[] letters = clean.toCharArray();
-        char[] reverseLetter = new char[letters.length];
+        char[] letters = clean.toCharArray();        
         
         int i = 0;
         for(int j=letters.length-1;j >= 0;j--){
-            reverseLetter[i] = letters[j];
+            if (letters[i] != letters[j]) {
+                return false;
+            }
             i++;
-        }       
-        
-        return (new String(letters)).equals(new String(reverseLetter));       
-        
+        }        
+        return true;        
     }
     
 }
