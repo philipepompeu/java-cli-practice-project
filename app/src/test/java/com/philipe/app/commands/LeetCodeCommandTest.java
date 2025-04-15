@@ -232,4 +232,12 @@ public class LeetCodeCommandTest {
         assertEquals("", command.longestCommonPrefix(new String[]{"dog","racecar","car"})); 
         assertEquals("a", command.longestCommonPrefix(new String[]{"a"}));
     }
+    
+    @Test
+    void reverseWords() {
+        
+        assertEquals("blue is sky the", command.reverseWords("the sky is blue"));
+        assertEquals("world hello", command.reverseWords("  hello world  ")); 
+        assertEquals("example good a", command.reverseWords("a good   example"));
+    }
 }

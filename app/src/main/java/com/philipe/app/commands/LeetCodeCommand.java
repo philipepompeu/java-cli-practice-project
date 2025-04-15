@@ -265,5 +265,17 @@ public class LeetCodeCommand {
         return "";              
         
     }
+
+    public String reverseWords(String s) {        
+        
+        List<String> words = Arrays.asList(s.split("\\s+"));
+        Collections.reverse(words);
+
+        String result = words.stream().collect(Collectors.joining(" "));
+
+
+        return result.trim();       
+        
+    }
     
 }
