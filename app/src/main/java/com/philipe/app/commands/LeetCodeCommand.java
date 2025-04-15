@@ -251,16 +251,15 @@ public class LeetCodeCommand {
 
         String prefix = strs[0];
         for(int j=prefix.length();j >= 0;j--){
-            int matches = 0;
+            String candidate = prefix.substring(0, j);
+            boolean allMatch = true;
             for(int i = 0; i < strs.length;i++){                
-                if (strs[i].startsWith(prefix.substring(0, j))) {
-                    matches++;
+                if (!strs[i].startsWith(candidate)) {
+                    allMatch = false;
+                    break;
                 }
             }
-
-            if (matches == strs.length) {
-                return prefix.substring(0,j);
-            }
+            if (allMatch) return candidate;
         }
 
         return "";              
