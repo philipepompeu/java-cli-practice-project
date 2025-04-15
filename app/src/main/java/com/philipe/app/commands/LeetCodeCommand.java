@@ -206,21 +206,17 @@ public class LeetCodeCommand {
 
     public boolean canJump(int[] nums) {
 
-        int limit = nums.length-1;
-        int begin = 0;
-        int i = 0;
+        int maxReach = 0;
+       
 
-        while(begin <= limit){
-            if (nums[begin] == 0){
-                begin = i;
-                i++;
-                begin += nums[i++];
-                continue;
+        for(int i = 0; i < nums.length;i++){
+            if (i > maxReach) {
+                return false;
             }
-            begin += nums[begin];
-        }        
+            maxReach = Math.max(maxReach, i+nums[i]);
+        }
      
-        return (begin >= limit);
+        return true;
     }
     
 }
