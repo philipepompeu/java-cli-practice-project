@@ -221,22 +221,29 @@ public class LeetCodeCommand {
     }
 
     public int hIndex(int[] citations) {
-        int[] orderedCitations = Arrays
-                                    .stream(citations)
-                                    .boxed()
-                                    .sorted(Comparator.reverseOrder())
-                                    .mapToInt(Integer::intValue)
-                                    .toArray();
+        int n = citations.length;
+        int[] count = new int[n+1];
 
-
-        int hIndex = 0;
-
-        for(int i = 0; i < orderedCitations.length;i++){
-            if (orderedCitations[i] >= i+1) {
-                hIndex = i+1;
+        // Contar quantos artigos têm x citações
+        for (int c : citations) {
+            if (c >= n) {
+                count[n]++;
+            } else {
+                count[c]++;
             }
         }
-        return hIndex;
+
+        int total = 0;
+        
+        for(int i = n;i >= 0;i--){
+            total += count[i];
+
+            if (total >= i) {
+                return i;
+            }
+        }
+
+        return 0;
     }
     
 }
