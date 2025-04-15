@@ -240,4 +240,13 @@ public class LeetCodeCommandTest {
         assertEquals("world hello", command.reverseWords("  hello world  ")); 
         assertEquals("example good a", command.reverseWords("a good   example"));
     }
+    
+    @Test
+    void isPalindrome() {
+        
+        assertTrue(command.isPalindrome("A man, a plan, a canal: Panama"));
+        assertTrue(command.isPalindrome(" "));
+        assertFalse(command.isPalindrome("race a car")); 
+        assertFalse(command.isPalindrome("0P")); 
+    }
 }

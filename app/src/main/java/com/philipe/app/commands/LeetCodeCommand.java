@@ -268,13 +268,32 @@ public class LeetCodeCommand {
 
     public String reverseWords(String s) {        
         
-        List<String> words = Arrays.asList(s.split("\\s+"));
-        Collections.reverse(words);
+        String[] words = s.trim().split("\\s+");
+        StringBuilder sb = new StringBuilder();
 
-        String result = words.stream().collect(Collectors.joining(" "));
+        for (int i = words.length - 1; i >= 0; i--) {
+            sb.append(words[i]);
+            if (i > 0) sb.append(' ');
+        }
+        return sb.toString();      
+        
+    }
 
 
-        return result.trim();       
+    public boolean isPalindrome(String s) {
+
+        String clean = s.toUpperCase().replaceAll("[^a-zA-Z0-9]","");
+
+        char[] letters = clean.toCharArray();
+        char[] reverseLetter = new char[letters.length];
+        
+        int i = 0;
+        for(int j=letters.length-1;j >= 0;j--){
+            reverseLetter[i] = letters[j];
+            i++;
+        }       
+        
+        return (new String(letters)).equals(new String(reverseLetter));       
         
     }
     
