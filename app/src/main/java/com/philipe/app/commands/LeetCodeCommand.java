@@ -249,51 +249,22 @@ public class LeetCodeCommand {
 
     public String longestCommonPrefix(String[] strs) {
 
-        Map<String, Integer> map = new HashMap<>();
-        for(String word : strs){
-            for(int i = 1;i <= word.length();i++){
-                String key = word.substring(0, i);
-                map.putIfAbsent(key, 0);                
-                map.put(key, map.get(key)+1);
-            }            
-        }
-        AtomicReference<String> result = new AtomicReference<>("");
-
-        map.entrySet().forEach(entry -> {
-
-            if (entry.getValue() == strs.length) {
-                if (entry.getKey().length() > result.get().length()) {
-                    result.set(entry.getKey());
+        String prefix = strs[0];
+        for(int j=prefix.length();j >= 0;j--){
+            int matches = 0;
+            for(int i = 0; i < strs.length;i++){                
+                if (strs[i].startsWith(prefix.substring(0, j))) {
+                    matches++;
                 }
             }
 
-        });
+            if (matches == strs.length) {
+                return prefix.substring(0,j);
+            }
+        }
 
-        return result.get();        
+        return "";              
         
     }
-    
-    
-    /*return map.entrySet().stream()
-            .filter(e -> e.getValue() == strs.length)
-            .map(e-> e.getKey())
-            .findAny()
-            .orElse("");*/             
-    /*for(int i = 0;i < strs.length; i++){
-            String word = strs[i];
-            int j = i+1;
-
-            for(int x = word.length();x >=0;x--){
-                String prefix = word.substring(0, x);
-
-            }
-            
-            while (j < strs.length) {
-                
-                
-                j++;
-            }
-
-        }*/
     
 }
