@@ -245,5 +245,27 @@ public class LeetCodeCommand {
 
         return 0;
     }
+
+
+    public String longestCommonPrefix(String[] strs) {
+
+        Map<String, Integer> map = new HashMap<>();
+        for(String word : strs){
+            for(int i = 1;i < word.length()-1;i++){
+                String key = word.substring(0, i);
+                if (!map.containsKey(key)) {
+                    map.put(key, 0);
+                }
+                map.put(key, map.get(key)+1);
+            }            
+        }
+
+        return map.entrySet().stream()
+                .filter(e -> e.getValue() > 1)
+                .map(e-> e.getKey())
+                .findAny()
+                .orElse("");             
+        
+    }
     
 }

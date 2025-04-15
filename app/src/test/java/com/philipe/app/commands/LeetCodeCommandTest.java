@@ -224,4 +224,11 @@ public class LeetCodeCommandTest {
         assertEquals(3, command.hIndex(new int[]{3,0,6,1,5}));
         assertEquals(1, command.hIndex(new int[]{1,3,1}));
     }
+
+    @Test
+    void longestCommonPrefix() {
+        
+        assertEquals("fl", command.longestCommonPrefix(new String[]{"flower","flow","flight"}));
+        assertEquals("", command.longestCommonPrefix(new String[]{"dog","racecar","car"}));
+    }
 }
