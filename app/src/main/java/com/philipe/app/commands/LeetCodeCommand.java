@@ -197,5 +197,30 @@ public class LeetCodeCommand {
 
         return result;
     }
+
+    public int lengthOfLastWord(String s) {
+        String[] words = s.split("\\s+");        
+     
+        return (words[words.length-1]).length();
+    }
+
+    public boolean canJump(int[] nums) {
+
+        int limit = nums.length-1;
+        int begin = 0;
+        int i = 0;
+
+        while(begin <= limit){
+            if (nums[begin] == 0){
+                begin = i;
+                i++;
+                begin += nums[i++];
+                continue;
+            }
+            begin += nums[begin];
+        }        
+     
+        return (begin >= limit);
+    }
     
 }
