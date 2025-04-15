@@ -3,6 +3,7 @@ package com.philipe.app.commands;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -217,6 +218,25 @@ public class LeetCodeCommand {
         }
      
         return true;
+    }
+
+    public int hIndex(int[] citations) {
+        int[] orderedCitations = Arrays
+                                    .stream(citations)
+                                    .boxed()
+                                    .sorted(Comparator.reverseOrder())
+                                    .mapToInt(Integer::intValue)
+                                    .toArray();
+
+
+        int hIndex = 0;
+
+        for(int i = 0; i < orderedCitations.length;i++){
+            if (orderedCitations[i] >= i+1) {
+                hIndex = i+1;
+            }
+        }
+        return hIndex;
     }
     
 }

@@ -207,18 +207,21 @@ public class LeetCodeCommandTest {
 
     @Test
     void lengthOfLastWord(){
-
         assertEquals(5, command.lengthOfLastWord("Hello World"));
         assertEquals(4, command.lengthOfLastWord("   fly me   to   the moon  "));
         assertEquals(6, command.lengthOfLastWord("luffy is still joyboy"));
-
     }
 
     @Test
     void canJump(){
-
         assertTrue(command.canJump(new int[]{2,3,1,1,4}));
         assertFalse(command.canJump(new int[]{3,2,1,0,4}));
         assertTrue(command.canJump(new int[]{2,5,0,0}));
+    }
+
+    @Test
+    void hIndex(){        
+        assertEquals(3, command.hIndex(new int[]{3,0,6,1,5}));
+        assertEquals(1, command.hIndex(new int[]{1,3,1}));
     }
 }
