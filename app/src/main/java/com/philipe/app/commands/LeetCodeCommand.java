@@ -35,6 +35,19 @@ public class LeetCodeCommand {
         return new ArrayList<>(groups.values());     
     }
 
+    public boolean isAnagram(String s, String t) {
+
+        char[] s1 = s.toCharArray();
+        char[] t2 = t.toCharArray();
+
+        Arrays.sort(s1);
+        Arrays.sort(t2);
+
+        return (new String(s1)).equals( new String(t2) );
+
+        
+    }
+
     public boolean validParentheses(String s){
 
         Stack<Character> stack = new Stack<>();
@@ -321,22 +334,18 @@ public class LeetCodeCommand {
 
         if (ransomNote.length() > magazine.length()) return false;
 
+        int[] letterBag = new int[26];        
         
-        Map<Character, Integer> letterBag = new HashMap<>();
-        
-        for(char c: magazine.toCharArray()){            
-            letterBag.put(c, letterBag.getOrDefault(c, 0)+1);
+        for(char c: magazine.toCharArray()){                        
+            letterBag[(int)c- 'a']+=1;
         }
 
         for(char c: ransomNote.toCharArray()){
-
-            if (letterBag.getOrDefault(c,0) == 0) {
+            if (letterBag[(int)c- 'a'] == 0) {
                 return false;
             }
-
-            letterBag.put(c,letterBag.get(c)-1);            
+            letterBag[(int)c- 'a']-=1;
         }
-
 
         return true;
         

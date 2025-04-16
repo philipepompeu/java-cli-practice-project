@@ -268,4 +268,14 @@ public class LeetCodeCommandTest {
         assertTrue(command.canConstruct("aa", "aab"));
         
     }
+    
+    @Test
+    void isAnagram() {
+        
+        
+        
+        assertFalse(command.isAnagram("rat", "car"));
+        assertTrue(command.isAnagram("anagram", "nagaram"));
+        
+    }
 }
