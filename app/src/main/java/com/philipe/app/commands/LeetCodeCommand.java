@@ -350,5 +350,32 @@ public class LeetCodeCommand {
         return true;
         
     }
+
+    public boolean isIsomorphic(String s, String t) {
+
+        if (s.length() != t.length()) return false;
+
+        Map<Character, Character> wordMap = new HashMap<>();        
+        Map<Character, Character> wordMap2 = new HashMap<>();        
+
+        for(int i = 0 ; i < s.length();i++){
+            char cs = s.charAt(i);
+            char ct = t.charAt(i);
+
+            if (wordMap.containsKey(cs) && wordMap.get(cs) != ct){
+                return false;
+            }
+            if(wordMap2.containsKey(ct) && wordMap2.get(ct) != cs){
+                return false;
+            }
+
+            wordMap.put(cs, ct);
+            wordMap2.put(ct, cs);           
+            
+        }
+        
+        return true;
+        
+    }
     
 }

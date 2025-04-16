@@ -270,12 +270,19 @@ public class LeetCodeCommandTest {
     }
     
     @Test
-    void isAnagram() {
-        
-        
+    void isAnagram() {       
         
         assertFalse(command.isAnagram("rat", "car"));
         assertTrue(command.isAnagram("anagram", "nagaram"));
+        
+    }
+   
+    @Test
+    void isIsomorphic() {       
+        
+        assertTrue(command.isIsomorphic("egg", "add"));
+        assertFalse(command.isIsomorphic("foo", "bar"));
+        assertFalse(command.isIsomorphic("badc", "baba"));
         
     }
 }
