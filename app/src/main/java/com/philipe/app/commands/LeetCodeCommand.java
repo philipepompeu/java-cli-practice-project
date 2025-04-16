@@ -307,13 +307,38 @@ public class LeetCodeCommand {
             for(int j = start; j < t.length();j++){    
                 if (t.charAt(j) == letter) {
                     word[i] = letter;
-                    start = j;
+                    start = j+1;
                     break;
                 }
             }
         }
 
         return (new String(word)).equals(s);
+        
+    }
+
+    public boolean canConstruct(String ransomNote, String magazine) {
+
+        if (ransomNote.length() > magazine.length()) return false;
+
+        
+        Map<Character, Integer> letterBag = new HashMap<>();
+        
+        for(char c: magazine.toCharArray()){            
+            letterBag.put(c, letterBag.getOrDefault(c, 0)+1);
+        }
+
+        for(char c: ransomNote.toCharArray()){
+
+            if (letterBag.getOrDefault(c,0) == 0) {
+                return false;
+            }
+
+            letterBag.put(c,letterBag.get(c)-1);            
+        }
+
+
+        return true;
         
     }
     

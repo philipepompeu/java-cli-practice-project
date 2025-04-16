@@ -258,4 +258,14 @@ public class LeetCodeCommandTest {
         assertFalse(command.isSubsequence("aaaaaa", "bbaaaa"));
         
     }
+    
+    @Test
+    void RansomNote() {
+        
+        
+        assertFalse(command.canConstruct("a", "b"));
+        assertFalse(command.canConstruct("aa", "ab"));
+        assertTrue(command.canConstruct("aa", "aab"));
+        
+    }
 }
