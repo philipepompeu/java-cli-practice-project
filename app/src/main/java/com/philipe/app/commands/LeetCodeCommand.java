@@ -294,5 +294,27 @@ public class LeetCodeCommand {
         }        
         return true;        
     }
+
+
+    public boolean isSubsequence(String s, String t) {
+
+        char[] word = new char[s.length()];
+        int start = 0;
+
+        for(int i = 0; i < s.length();i++){
+            char letter = s.charAt(i);
+            
+            for(int j = start; j < t.length();j++){    
+                if (t.charAt(j) == letter) {
+                    word[i] = letter;
+                    start = j;
+                    break;
+                }
+            }
+        }
+
+        return (new String(word)).equals(s);
+        
+    }
     
 }

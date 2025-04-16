@@ -249,4 +249,13 @@ public class LeetCodeCommandTest {
         assertFalse(command.isPalindrome("race a car")); 
         assertFalse(command.isPalindrome("0P")); 
     }
+    @Test
+    void isSubsequence() {
+        
+        assertTrue(command.isSubsequence("abc","ahbgdc"));
+        assertFalse(command.isSubsequence("axc", "ahbgdc"));
+        assertFalse(command.isSubsequence("acb", "ahbgdc"));
+        assertFalse(command.isSubsequence("aaaaaa", "bbaaaa"));
+        
+    }
 }
