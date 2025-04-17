@@ -354,27 +354,48 @@ public class LeetCodeCommand {
     public boolean isIsomorphic(String s, String t) {
 
         if (s.length() != t.length()) return false;
-
-        Map<Character, Character> wordMap = new HashMap<>();        
-        Map<Character, Character> wordMap2 = new HashMap<>();        
+           
+        int[][] mapOfChar = new int[2][256];
 
         for(int i = 0 ; i < s.length();i++){
             char cs = s.charAt(i);
             char ct = t.charAt(i);
 
-            if (wordMap.containsKey(cs) && wordMap.get(cs) != ct){
-                return false;
-            }
-            if(wordMap2.containsKey(ct) && wordMap2.get(ct) != cs){
-                return false;
-            }
+            int indexCs = (int)cs;
+            int indexCt = (int)ct;
 
-            wordMap.put(cs, ct);
-            wordMap2.put(ct, cs);           
+            if (mapOfChar[0][indexCs] == 0) mapOfChar[0][indexCs] = ct;
+            else if (mapOfChar[0][indexCs] != ct) return false;
+            
+            if (mapOfChar[1][indexCt] == 0) mapOfChar[1][indexCt] = cs;
+            else if (mapOfChar[1][indexCt] != cs) return false;
             
         }
         
         return true;
+        
+    }
+
+    //if(n == 1) return true;
+    //if(number.length() < 2) return false;
+    public boolean isHappy(int n) {
+
+        String number = Integer.toString(n);
+        
+        int happyNumber = 0;
+        while (happyNumber != 1) {
+
+            happyNumber = 0;
+            for(char c : number.toCharArray()){
+                int numericC = Character.getNumericValue(c);
+                
+                happyNumber += (numericC * numericC);
+
+            }
+            number = Integer.toString(happyNumber);
+        }
+
+        return (happyNumber == 1);
         
     }
     

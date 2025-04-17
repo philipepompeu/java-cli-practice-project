@@ -285,4 +285,13 @@ public class LeetCodeCommandTest {
         assertFalse(command.isIsomorphic("badc", "baba"));
         
     }
+    
+    @Test
+    void isHappy() {        
+        assertTrue(command.isHappy(19));
+        assertTrue(command.isHappy(1));
+        assertTrue(command.isHappy(7));
+        assertFalse(command.isHappy(2));        
+        
+    }
 }
