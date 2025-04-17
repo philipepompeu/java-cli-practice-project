@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -375,27 +376,32 @@ public class LeetCodeCommand {
         return true;
         
     }
-
-    //if(n == 1) return true;
-    //if(number.length() < 2) return false;
+    
     public boolean isHappy(int n) {
-
-        String number = Integer.toString(n);
         
-        int happyNumber = 0;
+        if(n == 1) return true;        
+
+        Set<Integer> previous = new HashSet<Integer>();
+
+        int happyNumber = 0;        
+        
         while (happyNumber != 1) {
 
             happyNumber = 0;
-            for(char c : number.toCharArray()){
-                int numericC = Character.getNumericValue(c);
-                
-                happyNumber += (numericC * numericC);
 
-            }
-            number = Integer.toString(happyNumber);
+            while (n > 0) {
+                int digit = n % 10;
+                happyNumber += (digit * digit);
+                n /= 10;
+            }            
+            
+            if(previous.contains(happyNumber)) return false;
+            
+            previous.add(happyNumber);
+            n = happyNumber;            
         }
 
-        return (happyNumber == 1);
+        return true;
         
     }
     
