@@ -294,4 +294,12 @@ public class LeetCodeCommandTest {
         assertFalse(command.isHappy(2));        
         
     }
+
+    @Test
+    void spiralOrder(){        
+        
+        assertArrayEquals(new int[]{1,2,3,6,9,8,7,4,5}, command.spiralOrder(new int[][]{{1,2,3},{4,5,6},{7,8,9}}).stream().mapToInt(Integer::intValue).toArray());
+        assertArrayEquals(new int[]{1,2,3,4,8,12,11,10,9,5,6,7}, command.spiralOrder(new int[][]{{1,2,3,4},{5,6,7,8},{9,10,11,12}}).stream().mapToInt(Integer::intValue).toArray());
+
+    }
 }

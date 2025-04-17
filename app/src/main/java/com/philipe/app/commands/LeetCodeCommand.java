@@ -404,5 +404,36 @@ public class LeetCodeCommand {
         return true;
         
     }
+
+
+    public List<Integer> spiralOrder(int[][] matrix) {
+
+        if(matrix.length < 2) return List.of();
+        
+        ArrayList<Integer> listOfInt = new ArrayList<>();
+
+        for(int i = 0; i < matrix.length ; i++){
+            int[] line = matrix[i];
+
+            if (i == 0) {                
+                for(int n : line){
+                    listOfInt.add(n);
+                }
+            }else if(i == matrix.length - 1){
+                for(int j = line.length-1;j >= 0;j--){
+                    listOfInt.add(line[j]);
+                }                
+                line = matrix[i-1];
+                for(int j = 0;j <= line.length-2;j++){
+                    listOfInt.add(line[j]);
+                }
+            }else{
+                listOfInt.add(line[line.length-1]);
+            }
+        }
+        
+
+        return listOfInt;
+    }
     
 }
