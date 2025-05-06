@@ -437,44 +437,26 @@ public class LeetCodeCommand {
     }
 
     public int romanToInt(String s) {
-        int value = 0;
-        int[] mapOfChar = new int[256];
+        int result = 0;
+        int[] romanMap = new int[256];
 
-        mapOfChar['I'] = 1;
-        mapOfChar['V'] = 5;
-        mapOfChar['X'] = 10;
-        mapOfChar['L'] = 50;
-        mapOfChar['C'] = 100;
-        mapOfChar['D'] = 500;
-        mapOfChar['M'] = 1000;
+        romanMap['I'] = 1;
+        romanMap['V'] = 5;
+        romanMap['X'] = 10;
+        romanMap['L'] = 50;
+        romanMap['C'] = 100;
+        romanMap['D'] = 500;
+        romanMap['M'] = 1000;
+        
+        for(int i = 0; i < s.length() ; i++ ){
+            char c = s.charAt(i);
+            int current = romanMap[ c ];
+            int next = (i +1 < s.length() ? romanMap[ s.charAt(i+1) ] : 0);
 
-        char[] numbers = s.toCharArray();
-        for(int i = 0; i < numbers.length ; i++ ){
-            char c = numbers[i];
-            int add = mapOfChar[c];
-            
-            if (i-1 >= 0 ) {
-                char prevChar = numbers[i-1];
-                if ((( c == 'V') || ( c == 'X')) && ( prevChar == 'I')){
-                    add--;
-                    add-=mapOfChar[prevChar];
-                }
-                
-                if ((( c == 'L') || ( c == 'C')) && ( prevChar == 'X')){
-                    add-=10;
-                    add-=mapOfChar[prevChar];
-                }
-                
-                if ((( c == 'D') || ( c == 'M')) && ( prevChar == 'C')){
-                    add-=100;
-                    add-=mapOfChar[prevChar];
-                }
-            }
-            
-            value+= add;
+            result += current  * ( (current < next) ? -1 : 1 );                       
         }
 
-        return value;
+        return result;
     }
     
 }
