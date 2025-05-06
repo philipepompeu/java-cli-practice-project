@@ -299,7 +299,16 @@ public class LeetCodeCommandTest {
     void spiralOrder(){        
         
         assertArrayEquals(new int[]{1,2,3,6,9,8,7,4,5}, command.spiralOrder(new int[][]{{1,2,3},{4,5,6},{7,8,9}}).stream().mapToInt(Integer::intValue).toArray());
-        assertArrayEquals(new int[]{1,2,3,4,8,12,11,10,9,5,6,7}, command.spiralOrder(new int[][]{{1,2,3,4},{5,6,7,8},{9,10,11,12}}).stream().mapToInt(Integer::intValue).toArray());
-
+        assertArrayEquals(new int[]{1,2,3,4,8,12,11,10,9,5,6,7}, command.spiralOrder(new int[][]{{1,2,3,4},{5,6,7,8},{9,10,11,12}}).stream().mapToInt(Integer::intValue).toArray());        
+        assertArrayEquals(new int[]{1}, command.spiralOrder(new int[][]{{1}}).stream().mapToInt(Integer::intValue).toArray());
     }
+
+    @Test
+    void romanToInt() {
+        
+        assertEquals(3      , command.romanToInt("III"));
+        assertEquals(58     , command.romanToInt("LVIII")); 
+        assertEquals(1994   , command.romanToInt("MCMXCIV"));
+    }
+
 }

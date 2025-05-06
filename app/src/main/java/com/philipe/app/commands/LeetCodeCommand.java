@@ -408,7 +408,7 @@ public class LeetCodeCommand {
 
     public List<Integer> spiralOrder(int[][] matrix) {
 
-        if(matrix.length < 2) return List.of();
+        if(matrix.length < 2) return Arrays.stream(matrix[0]).mapToObj(n -> (Integer)n).toList();
         
         ArrayList<Integer> listOfInt = new ArrayList<>();
 
@@ -434,6 +434,47 @@ public class LeetCodeCommand {
         
 
         return listOfInt;
+    }
+
+    public int romanToInt(String s) {
+        int value = 0;
+        int[] mapOfChar = new int[256];
+
+        mapOfChar['I'] = 1;
+        mapOfChar['V'] = 5;
+        mapOfChar['X'] = 10;
+        mapOfChar['L'] = 50;
+        mapOfChar['C'] = 100;
+        mapOfChar['D'] = 500;
+        mapOfChar['M'] = 1000;
+
+        char[] numbers = s.toCharArray();
+        for(int i = 0; i < numbers.length ; i++ ){
+            char c = numbers[i];
+            int add = mapOfChar[c];
+            
+            if (i-1 >= 0 ) {
+                char prevChar = numbers[i-1];
+                if ((( c == 'V') || ( c == 'X')) && ( prevChar == 'I')){
+                    add--;
+                    add-=mapOfChar[prevChar];
+                }
+                
+                if ((( c == 'L') || ( c == 'C')) && ( prevChar == 'X')){
+                    add-=10;
+                    add-=mapOfChar[prevChar];
+                }
+                
+                if ((( c == 'D') || ( c == 'M')) && ( prevChar == 'C')){
+                    add-=100;
+                    add-=mapOfChar[prevChar];
+                }
+            }
+            
+            value+= add;
+        }
+
+        return value;
     }
     
 }
